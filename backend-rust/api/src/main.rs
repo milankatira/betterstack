@@ -1,5 +1,6 @@
+use std::fmt::Error;
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> Result<(), Error> {
     print!("Hello, world!");
-    return();
+    Ok(())
 }
