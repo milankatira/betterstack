@@ -1,14 +1,20 @@
-use poem::{get, handler, listener::TcpListener, web::Path, Route, Server};
+use poem::{ get, post, handler, listener::TcpListener, web::Path, Route, Server };
 
 #[handler]
-fn hello(Path(name): Path<String>) -> String {
-    format!("hello: {}", name)
+fn get_website(Path(website_id): Path<String>) -> String {
+    format!("hello: {}", website_id)
+}
+
+#[handler]
+fn create_website(Path(_website_id): Path<String>) -> String {
+    format!("hello")
 }
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
-    let app = Route::new().at("/hello/:name", get(hello));
-    Server::new(TcpListener::bind("0.0.0.0:3000"))
-      .run(app)
-      .await
+    let app = Route::new()
+        .at("/status/:website_id", get(get_website))
+        .at("/website", post(create_website));
+
+    Server::new(TcpListener::bind("0.0.0.0:3001")).run(app).await
 }
