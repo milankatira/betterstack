@@ -12,3 +12,32 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Website {
+  id        String        @id @default(cuid())
+  url       String        @unique
+  timeAdded DateTime      @default(now())
+  ticks     WebsiteTick[]
+}
+
+model Region {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  websiteTicks WebsiteTick[]
+}
+
+model WebsiteTick {
+  id               String        @id @default(cuid())
+  website          Website       @relation(fields: [website_id], references: [id])
+  region           Region        @relation(fields: [region_id], references: [id])
+  response_time_ms Int
+  website_id       String
+  region_id        String
+  status           WebsiteStatus
+}
+
+enum WebsiteStatus {
+  UP
+  DOWN
+  UNKNOWN
+}
